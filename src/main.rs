@@ -1,18 +1,15 @@
 use std::collections::HashMap;
 use std::sync::{Arc, Mutex};
 
-struct Bar<R> {
-    dyn_hashmap: Mutex<HashMap<&'static str, Arc<dyn Foo<R>>>>,
+struct Bar {
+    dyn_hashmap: Mutex<HashMap<&'static str, Arc<dyn Foo>>>,
 }
 
-// We cannot use generic type parameters here.
-//
-// For a trait to be "object safe" it needs to allow building
-// a vtable to allow the call to be resolvable dynamically:
-// https://doc.rust-lang.org/reference/items/traits.html#object-safety
-trait Foo<R> {
-    fn do_something(&self, bar: &mut R);
+trait Foo {
+    fn do_something(&self, bar: &mut Box<dyn Stream>);
 }
+
+trait Stream {}
 
 fn main() {
     println!("Hello, world!");
